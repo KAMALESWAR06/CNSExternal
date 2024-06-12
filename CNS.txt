@@ -1,0 +1,248 @@
+
+#SHA-1 Algorithm
+import hashlib
+
+def calculate_sha512_digest(text):
+    encoded_text = text.encode('utf-8')
+    sha512_digest = hashlib.sha512(encoded_text).hexdigest()
+    return sha512_diges
+
+text = "This is a sample text for calculating SHA-512 digest."
+sha512_digest = calculate_sha512_digest(text)
+print("SHA-512 Digest:", sha512_digest)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#import math
+
+def gcd(a, b):
+    temp = 0
+    while(1):
+        temp = a % b
+        if (temp == 0):
+            return b
+        a = b
+        b = temp
+
+# Initialize variables
+p, q = 3, 7
+n = p * q
+phi = (p - 1) * (q - 1)
+
+# Find e
+e = 2
+while (e < phi):
+    if(gcd(e, phi) == 1):
+        break
+    else:
+        e = e + 1
+
+# Calculate d
+k = 2
+d = (1 + (k * phi)) / e
+
+# Message to encrypt
+msg = 12.0
+print("Message data =", msg)
+
+# Encryption
+c = math.fmod(pow(msg, e), n)
+print("Encrypted data =", c)
+
+# Decryption
+m = math.fmod(pow(c, d), n)
+print("Original Message Sent =", m)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# HILL CIPHER 
+key_matrix = [[0] * 3 for _ in range(3)]
+message_vector = [[0] for _ in range(3)]
+cipher_matrix = [[0] for _ in range(3)]
+
+def generate_key_matrix(key):
+    k = 0
+    for i in range(3):
+        for j in range(3):
+            key_matrix[i][j] = ord(key[k]) % 65
+            k += 1
+
+def encrypt_message(message_vector):
+    for i in range(3):
+        for j in range(1):
+            cipher_matrix[i][j] = 0
+            for x in range(3):
+                cipher_matrix[i][j] += (key_matrix[i][x] * message_vector[x][j])
+            cipher_matrix[i][j] = cipher_matrix[i][j] % 26
+
+def hill_cipher(message, key):
+    generate_key_matrix(key)
+    for i in range(3):
+        message_vector[i][0] = ord(message[i]) % 65
+    encrypt_message(message_vector)
+    cipher_text = []
+    for i in range(3):
+        cipher_text.append(chr(cipher_matrix[i][0] + 65))
+    print("Ciphertext:", "".join(cipher_text))
+
+message = "ACT"
+key = "GYBNQKURP"
+hill_cipher(message, key)
+
+
+
+
+
+
+
+def generate_key_matrix(key):
+    key_matrix = [['' for _ in range(5)] for _ in range(5)]
+    key = key.upper().replace("J", "I")  # Convert to uppercase and replace 'J' with 'I'
+
+    # Fill the key matrix with unique letters from the key
+    letters = set()
+    i, j = 0, 0
+    for char in key + 'ABCDEFGHIKLMNOPQRSTUVWXYZ':
+        if char not in letters:
+            key_matrix[i][j] = char
+            letters.add(char)
+            j += 1
+            if j == 5:
+                i += 1
+                j = 0
+
+    return key_matrix
+
+def find_positions(matrix, char):
+    for i in range(5):
+        for j in range(5):
+            if matrix[i][j] == char:
+                return i, j
+
+def encrypt(plaintext, key):
+    matrix = generate_key_matrix(key)
+    ciphertext = ''
+    plaintext = plaintext.upper().replace("J", "I")
+
+    # Prepare the plaintext by adding an 'X' between repeated letters and making pairs
+    pairs = [plaintext[i:i+2] if len(plaintext[i:i+2]) == 2 else plaintext[i] + 'X' for i in range(0, len(plaintext), 2)]
+
+    for pair in pairs:
+        a, b = pair[0], pair[1]
+        ai, aj = find_positions(matrix, a)
+        bi, bj = find_positions(matrix, b)
+
+        if ai == bi:  # Same row
+            ciphertext += matrix[ai][(aj + 1) % 5] + matrix[bi][(bj + 1) % 5]
+        elif aj == bj:  # Same column
+            ciphertext += matrix[(ai + 1) % 5][aj] + matrix[(bi + 1) % 5][bj]
+        else:  # Different row and column
+            ciphertext += matrix[ai][bj] + matrix[bi][aj]
+
+    return ciphertext
+
+def decrypt(ciphertext, key):
+    matrix = generate_key_matrix(key)
+    plaintext = ''
+
+    pairs = [ciphertext[i:i+2] for i in range(0, len(ciphertext), 2)]
+
+    for pair in pairs:
+        a, b = pair[0], pair[1]
+        ai, aj = find_positions(matrix, a)
+        bi, bj = find_positions(matrix, b)
+
+        if ai == bi:  # Same row
+            plaintext += matrix[ai][(aj - 1) % 5] + matrix[bi][(bj - 1) % 5]
+        elif aj == bj:  # Same column
+            plaintext += matrix[(ai - 1) % 5][aj] + matrix[(bi - 1) % 5][bj]
+        else:  # Different row and column
+            plaintext += matrix[ai][bj] + matrix[bi][aj]
+
+    return plaintext
+
+# Example usage:
+key = "KEYWORD"
+plaintext = "HELLO"
+encrypted_text = encrypt(plaintext, key)
+decrypted_text = decrypt(encrypted_text, key)
+
+print(f"Plaintext: {plaintext}")
+print(f"Encrypted Text: {encrypted_text}")
+print(f"Decrypted Text: {decrypted_text}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def CaesarCipher(message, shift):
+    alphabet = 'abcdefghijklmnopqrstuvwxyz'
+    message = message.lower()
+
+    result = ""
+    for letter in message:
+        if letter in alphabet:
+            index = alphabet.find(letter) 
+            index = (index + shift)%(len(alphabet))
+
+            if index < 0:
+                index = index + len(alphabet)
+
+            result = result + alphabet[index]
+
+        else:
+            result = result + letter
+    return result
+
+
+print (CaesarCipher("Hello",1))
+
+
+
+
+for /l %i in (1,1,10) do (openssl rand -base64 15 | openssl enc -base64 -A | powershell -Command "$input.Substring(0, 12)")
+
+
+
